@@ -33,15 +33,11 @@ def obfuscate(fname, backup): # method to obfuscate a file (fname = file, backup
 	s = re.sub('//.*\n', '\n', s) # remove in-line comments
 	s = re.sub(r'{[^$]*?}', '', s) # remove block comments which aren't compiler directives
 
+	strs = [] # strings to not change
+
 	i = 0 # reset current i count
 	while re.search(r'\b' + toB26(i) + r'\b', s): # increment i until not conflicts
 		i += 1
-
-	strs = [] # strings to not change
-
-	for match in re.finditer(r"(?:'(?:[^'\\]|\\.)*'|{\$.*})", s): # iterate all found compiler directives and strings
-		strs += [match.group(0)] # add to strings not to change list
-	s = re.sub(r"(?:'(?:[^'\\]|\\.)*'|{\$.*})", '#####', s) # replace with temporary padding that won't be killed by obfuscation
 
 	s = re.sub(r'(?:\b[a-zA-Z_]+\b)' + radd, build, s) # this is where the magic happens 
 	# (finds all valid keywords/vars/symbols then calls the build function on them
@@ -59,7 +55,7 @@ def obfuscate(fname, backup): # method to obfuscate a file (fname = file, backup
 
 	f.close() # close the file
 	if backup: # if in a new file
-		f = open(fname + '_obf', 'w') # create/overwrite and obfuscated version of the file
+		f = open(fname + '_obf', 'w') # create/overwrite an obfuscated version of the file
 		f.write(s) # write the new data
 		f.close() # close the file
 	else: # if not a new file
@@ -80,7 +76,7 @@ if os.path.exists(fname): # if it exists
 	if os.path.isfile(fname): # if is a file
 		obfuscate(fname, True) # obfuscate into new file
 	elif os.path.isdir(fname): # if is a directory
-		dest = './backup' + re.sub(r'\\', '/', re.sub(r'^([^\\/])', r'/\1', re.sub('(?:[a-zA-Z]:)?', '', re.sub('(?:\\|/)$', '', os.path.abspath(fname))))) # create local backup path
+		dest = './derpbackup' + re.sub(r'\\', '/', re.sub(r'^([^\\/])', r'/\1', re.sub('(?:[a-zA-Z]:)?', '', re.sub('(?:\\|/)$', '', os.path.abspath(fname))))) # create local backup path
 		while os.path.exists(dest): # while local backup with that name exists
 			dest += '_' # add underscores
 		shutil.copytree(fname, dest) # copy target folder into local backup (obfuscating a whole student's project folder is too trolly to not allow reversing)
@@ -89,7 +85,7 @@ if os.path.exists(fname): # if it exists
 		for d1, rubbish, d2 in dirn: # for all path stuff in directory
 			for filen in d2: # for each file in the path stuff
 				filename = os.path.join(d1, filen) # create nice filename
-				if filename[-4:].lower() == '.dpr' or filename[-4:].lower() == '.pas': # if file-name means it's a pascal/delphi file
+				if filename[-4:].lower() == '.dpr' or filename[-4:].lower() == '.pas' or filename[-4:].lower() == '.lpr': # if file-name means it's a pascal/delphi file
 					obfuscate(filename, False) # obfuscate into same file
 					print 'Derped on ' + filename # print file changed
 					c += 1 # increment count
