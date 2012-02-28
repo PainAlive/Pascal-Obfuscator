@@ -50,10 +50,10 @@ if os.path.exists(fname): # if it exists
 				filename = os.path.join(d1, filen) # create nice filename
 				if filename[-4:].lower() == '.dpr' or filename[-4:].lower() == '.pas' or filename[-4:].lower() == '.lpr': # if file-name means it's a pascal/delphi file
 					deobfuscate(filename, False) # obfuscate into same file
-					print 'Derped on ' + filename # print file changed
+					print 'Underped ' + filename # print file changed
 					c += 1 # increment count
 		if c > 0: # if has obfuscated anything
-			print 'And he derped on ALL the files! (' + str(c) + ')' # print amount of files obfuscated
+			print 'And he underped ALL the files! (' + str(c) + ')' # print amount of files obfuscated
 		else: # no files
 			print 'No pascal files found' # say that
 else: # path didn't exist

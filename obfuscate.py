@@ -32,6 +32,7 @@ def obfuscate(fname, backup): # method to obfuscate a file (fname = file, backup
 
 	s = re.sub('//.*\n', '\n', s) # remove in-line comments
 	s = re.sub(r'{[^$]*?}', '', s) # remove block comments which aren't compiler directives
+	s = re.sub(r'{\$macro\s+on}', '', s) # remove macro compiler directives
 
 	strs = [] # strings to not change
 
@@ -63,7 +64,7 @@ def obfuscate(fname, backup): # method to obfuscate a file (fname = file, backup
 		f.write(s) # re-write file with data
 		f.close() # close
 
-syms = [':=', ':', ';', ',', '\[', '\]', '\{', '\}', '\(', '\)', '<>', '>=', '<=', '<', '>', '=', '\+', '-', '\*', '/', '\.\.'] # symbols that can be replaced
+syms = [':=', ':', ';', ',', '\[', '\]', '\{', '\}', '\(', '\)', '<>', '>=', '<=', '<', '>', '=', '\+', '-', '\*', '/', '\.\.', '\.'] # symbols that can be replaced
 radd = '' # to add to build regex
 for sym in syms: # iterate symbols
 	radd += '|' + sym # add to extra regex stuff
